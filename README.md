@@ -11,7 +11,6 @@ interativamente. O braço e a mão também giram, cada um pelo seu pivô.
 
 ## Como o Steve é montado
 
-
              40
           ┌──────┐
           │cabeça│ 40        y = -160  topo

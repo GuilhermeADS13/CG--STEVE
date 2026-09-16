@@ -1,6 +1,3 @@
-/* =====================================================================
-   controles.js — sliders, checkboxes, teclado e o painel da matriz.
-   ===================================================================== */
 "use strict";
 
 const cX = document.getElementById("c-x");
@@ -60,7 +57,6 @@ window.addEventListener("keydown", function (e) {
   if (usou) { e.preventDefault(); sincronizar(); }
 });
 
-// Mostra a matriz composta do corpo no formato 3x3 de coordenadas homogêneas.
 const f3 = n => (Math.abs(n) < 0.0005 ? 0 : n).toFixed(3).padStart(8);
 
 function atualizarMatriz() {

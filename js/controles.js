@@ -1,30 +1,30 @@
 "use strict";
 
-const cX = document.getElementById("c-x");
-const cY = document.getElementById("c-y");
-const cR = document.getElementById("c-r");
-const cS = document.getElementById("c-s");
-const cO = document.getElementById("c-ombro");
-const cC = document.getElementById("c-cotovelo");
-
-const vX = document.getElementById("v-x");
-const vY = document.getElementById("v-y");
-const vR = document.getElementById("v-r");
-const vS = document.getElementById("v-s");
-const vO = document.getElementById("v-ombro");
-const vC = document.getElementById("v-cotovelo");
-
 const elMatriz = document.getElementById("matriz");
 
-const GRAU = "°";
+const CONTROLES = [
+  { id: "x",        campo: "x",              texto: v => Math.round(v) },
+  { id: "y",        campo: "y",              texto: v => Math.round(v) },
+  { id: "r",        campo: "graus",          texto: v => Math.round(v) + "°" },
+  { id: "s",        campo: "escala",         texto: v => v.toFixed(2) + "×" },
+  { id: "ombro",    campo: "anguloOmbro",    texto: v => Math.round(v) + "°" },
+  { id: "cotovelo", campo: "anguloCotovelo", texto: v => Math.round(v) + "°" }
+];
+
+for (const c of CONTROLES) {
+  c.slider = document.getElementById("c-" + c.id);
+  c.valor = document.getElementById("v-" + c.id);
+  c.slider.addEventListener("input", () => {
+    estado[c.campo] = +c.slider.value;
+    atualiza();
+  });
+}
 
 function sincronizar() {
-  cX.value = estado.x;      vX.textContent = Math.round(estado.x);
-  cY.value = estado.y;      vY.textContent = Math.round(estado.y);
-  cR.value = estado.graus;  vR.textContent = Math.round(estado.graus) + GRAU;
-  cS.value = estado.escala; vS.textContent = estado.escala.toFixed(2) + "×";
-  cO.value = estado.anguloOmbro;    vO.textContent = Math.round(estado.anguloOmbro) + GRAU;
-  cC.value = estado.anguloCotovelo; vC.textContent = Math.round(estado.anguloCotovelo) + GRAU;
+  for (const c of CONTROLES) {
+    c.slider.value = estado[c.campo];
+    c.valor.textContent = c.texto(estado[c.campo]);
+  }
 }
 
 function atualiza() {
@@ -32,49 +32,52 @@ function atualiza() {
   desenha();
 }
 
-cX.addEventListener("input", function () { estado.x = +cX.value; atualiza(); });
-cY.addEventListener("input", function () { estado.y = +cY.value; atualiza(); });
-cR.addEventListener("input", function () { estado.graus = +cR.value; atualiza(); });
-cS.addEventListener("input", function () { estado.escala = +cS.value; atualiza(); });
-cO.addEventListener("input", function () { estado.anguloOmbro = +cO.value; atualiza(); });
-cC.addEventListener("input", function () { estado.anguloCotovelo = +cC.value; atualiza(); });
+function ajusta(campo, delta) {
+  const c = CONTROLES.find(c => c.campo === campo);
+  const v = estado[campo] + delta;
+  estado[campo] = Math.min(+c.slider.max, Math.max(+c.slider.min, v));
+}
 
-document.getElementById("reset").addEventListener("click", function () {
+const TECLAS = {
+  ArrowLeft:  passo => ajusta("x", -passo),
+  ArrowRight: passo => ajusta("x", passo),
+  ArrowUp:    passo => ajusta("y", -passo),
+  ArrowDown:  passo => ajusta("y", passo),
+  q: () => ajusta("graus", -4),
+  e: () => ajusta("graus", 4),
+  a: () => ajusta("anguloOmbro", -5),
+  d: () => ajusta("anguloOmbro", 5),
+  "+": () => ajusta("escala", 0.1),
+  "=": () => ajusta("escala", 0.1),
+  "-": () => ajusta("escala", -0.1),
+  _: () => ajusta("escala", -0.1),
+  f: () => { estado.espelhado = !estado.espelhado; }
+};
+
+window.addEventListener("keydown", e => {
+  const acao = TECLAS[e.key] || TECLAS[e.key.toLowerCase()];
+  if (!acao) return;
+  e.preventDefault();
+  acao(e.shiftKey ? 20 : 6);
+  atualiza();
+});
+
+document.getElementById("reset").addEventListener("click", () => {
   Object.assign(estado, PADRAO);
   atualiza();
 });
 
-const limite = (v, min, max) => Math.min(max, Math.max(min, v));
-
-window.addEventListener("keydown", function (e) {
-  const passo = e.shiftKey ? 20 : 6;
-  let usou = true;
-
-  switch (e.key) {
-    case "ArrowLeft":   estado.x = limite(estado.x - passo, 0, LARG); break;
-    case "ArrowRight":  estado.x = limite(estado.x + passo, 0, LARG); break;
-    case "ArrowUp":     estado.y = limite(estado.y - passo, 120, ALT_CV); break;
-    case "ArrowDown":   estado.y = limite(estado.y + passo, 120, ALT_CV); break;
-    case "q": case "Q": estado.graus = limite(estado.graus - 4, -180, 180); break;
-    case "e": case "E": estado.graus = limite(estado.graus + 4, -180, 180); break;
-    case "+": case "=": estado.escala = limite(estado.escala + 0.1, 0.5, 4); break;
-    case "-": case "_": estado.escala = limite(estado.escala - 0.1, 0.5, 4); break;
-    case "a": case "A": estado.anguloOmbro = limite(estado.anguloOmbro - 5, -180, 180); break;
-    case "d": case "D": estado.anguloOmbro = limite(estado.anguloOmbro + 5, -180, 180); break;
-    case "f": case "F": estado.espelhado = !estado.espelhado; break;
-    default: usou = false;
-  }
-
-  if (usou) { e.preventDefault(); atualiza(); }
-});
-
-const f3 = n => (Math.abs(n) < 0.0005 ? 0 : n).toFixed(3).padStart(8);
+function formata(n) {
+  if (Math.abs(n) < 0.0005) n = 0;
+  return n.toFixed(3).padStart(8);
+}
 
 function atualizarMatriz() {
   if (!matrizAtual) return;
   const m = matrizAtual;
-  elMatriz.textContent =
-    "| " + f3(m.a) + " " + f3(m.c) + " " + f3(m.e) + " |\n" +
-    "| " + f3(m.b) + " " + f3(m.d) + " " + f3(m.f) + " |\n" +
-    "| " + f3(0)   + " " + f3(0)   + " " + f3(1)   + " |";
+  elMatriz.textContent = [
+    [m.a, m.c, m.e],
+    [m.b, m.d, m.f],
+    [  0,   0,   1]
+  ].map(linha => "| " + linha.map(formata).join(" ") + " |").join("\n");
 }

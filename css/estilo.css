@@ -1,0 +1,111 @@
+:root {
+  --bg: #14161c;
+  --card: #1e222c;
+  --linha: #2e3442;
+  --texto: #e6e9ef;
+  --fraco: #98a1b3;
+  --ciano: #00eedd;
+  --azul: #0088cc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 24px 16px 48px;
+  background: var(--bg);
+  color: var(--texto);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.wrap { max-width: 1020px; margin: 0 auto; }
+
+h1 { font-size: 22px; margin: 0 0 4px; }
+h1 span { color: var(--ciano); }
+.sub { color: var(--fraco); font-size: 14px; margin: 0 0 20px; }
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--linha);
+  border-radius: 10px;
+  background: #5c94fc;
+  image-rendering: pixelated;
+}
+
+.painel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+@media (max-width: 720px) { .painel { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--linha);
+  border-radius: 10px;
+  padding: 16px;
+}
+.card h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--fraco);
+  margin: 0 0 14px;
+}
+
+.ctrl { margin-bottom: 14px; }
+.ctrl label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.ctrl label b { color: var(--ciano); font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: var(--ciano); }
+
+.linha-btn { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+button {
+  background: var(--azul);
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+button:hover { background: #00a0ee; }
+
+.check { display: flex; align-items: center; gap: 7px; font-size: 13px; }
+.check input { accent-color: var(--ciano); }
+
+pre.matriz {
+  margin: 0;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ciano);
+  background: #12151b;
+  border-radius: 6px;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.ordem {
+  font-family: Consolas, monospace;
+  font-size: 12.5px;
+  color: var(--fraco);
+  margin-top: 12px;
+  line-height: 1.7;
+}
+.ordem em { color: var(--texto); font-style: normal; }
+
+ul.req { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.85; color: var(--fraco); }
+ul.req b { color: var(--texto); font-weight: 600; }
+ul.req code { color: var(--ciano); font-size: 12.5px; }
+
+.dica { font-size: 12.5px; color: var(--fraco); margin: 12px 0 0; }
+.dica b { color: var(--texto); }

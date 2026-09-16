@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steve — Transformações Geométricas 2D</title>
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Steve <span>— Transformações Geométricas 2D</span></h1>
+  <p class="sub">Canvas 2D · translate · rotate · scale · composição · ponto fixo (T → Op → T⁻¹) · requestAnimationFrame</p>
+
+  <canvas id="cena" width="960" height="600"></canvas>
+
+  <div class="painel">
+
+    <div class="card">
+      <h2>Controles</h2>
+
+      <div class="ctrl">
+        <label>Translação X <b id="v-x">480</b></label>
+        <input type="range" id="c-x" min="0" max="960" step="1" value="480">
+      </div>
+
+      <div class="ctrl">
+        <label>Translação Y <b id="v-y">520</b></label>
+        <input type="range" id="c-y" min="120" max="600" step="1" value="520">
+      </div>
+
+      <div class="ctrl">
+        <label>Rotação do corpo <b id="v-r">0°</b></label>
+        <input type="range" id="c-r" min="-180" max="180" step="1" value="0">
+      </div>
+
+      <div class="ctrl">
+        <label>Escala <b id="v-s">0.45×</b></label>
+        <input type="range" id="c-s" min="0.15" max="1.1" step="0.01" value="0.45">
+      </div>
+
+      <div class="linha-btn">
+        <button id="reset">Resetar</button>
+        <span class="check">
+          <input type="checkbox" id="c-espelho">
+          <label for="c-espelho">reflexão S(−1, 1)</label>
+        </span>
+        <span class="check">
+          <input type="checkbox" id="c-guias" checked>
+          <label for="c-guias">mostrar pivôs e eixos</label>
+        </span>
+      </div>
+
+      <p class="dica">Teclado: <b>setas</b> movem · <b>Q</b>/<b>E</b> giram · <b>+</b>/<b>−</b> escalam · <b>F</b> espelha.</p>
+    </div>
+
+    <div class="card">
+      <h2>Matriz composta do Steve</h2>
+      <pre class="matriz" id="matriz">carregando…</pre>
+      <div class="ordem">
+        corpo:<br>
+        <em>T</em>(x, y) · <em>S</em>(s, s) · [ <em>T</em>(c) · <em>R</em>(θ) · <em>T</em>(−c) ]<br><br>
+        braço, dentro do corpo:<br>
+        … · [ <em>T</em>(ombro) · <em>R</em>(α) · <em>T</em>(−ombro) ]<br><br>
+        mão, dentro do braço (hierarquia):<br>
+        … · [ <em>T</em>(cotovelo) · <em>R</em>(β) · <em>T</em>(−cotovelo) ]
+      </div>
+    </div>
+
+    <div class="card" style="grid-column: 1 / -1;">
+      <h2>Requisitos atendidos</h2>
+      <ul class="req">
+        <li><b>1. Translação</b> — <code>ctx.translate</code> posiciona o Steve, o sol, as nuvens e cada bloco do chão. <code>js/cenario.js</code> e <code>js/steve.js</code></li>
+        <li><b>2. Rotação</b> — <code>ctx.rotate</code> gira o corpo, o braço e a mão. <code>js/steve.js</code></li>
+        <li><b>3. Escala</b> — <code>ctx.scale</code> redimensiona o Steve; o sprite é sempre desenhado em pixels originais. <code>js/steve.js</code></li>
+        <li><b>4. Composição</b> — translação → escala → rotação encadeadas na mesma matriz do corpo. <code>js/steve.js</code></li>
+        <li><b>5. Ponto fixo (T → Op → T⁻¹)</b> — três casos: corpo em torno do próprio centro, braço em torno do <b>ombro</b> e mão em torno do <b>cotovelo</b>. <code>js/steve.js</code></li>
+        <li><b>6. Animação</b> — <code>requestAnimationFrame</code> com <code>setTransform(1,0,0,1,0,0)</code> zerando a matriz a cada frame. <code>js/main.js</code></li>
+        <li><b>7. Pilha de estados</b> — <code>save</code>/<code>restore</code> isolam cenário, corpo, braço, mão e marcadores.</li>
+        <li><b>Bônus</b> — interatividade (<code>js/controles.js</code>), <b>reflexão</b> <code>scale(-1, 1)</code> e <b>hierarquia</b>: a mão é desenhada dentro do <code>save</code> do braço, então herda a rotação do ombro e ainda gira no cotovelo.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- Scripts clássicos, carregados nesta ordem (config primeiro, main por último).
+     Não use type="module": módulos ES são bloqueados por CORS no protocolo
+     file://, e a entrega exige abrir o index.html sem servidor. -->
+<script src="js/config.js"></script>
+<script src="js/cenario.js"></script>
+<script src="js/steve.js"></script>
+<script src="js/controles.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

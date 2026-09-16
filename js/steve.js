@@ -54,17 +54,20 @@ function desenhaMao() {
 function desenhaSteve() {
   ctx.save();
 
-  // COMPOSIÇÃO
-  ctx.translate(estado.x, estado.y);
-  ctx.scale(estado.escala, estado.escala);
+  // COMPOSIÇÃO: M = T . R . S
+  const px = CENTRO.x * estado.escala;
+  const py = CENTRO.y * estado.escala;
+
+  ctx.translate(estado.x, estado.y);          // 3a op: translacao
+
+  ctx.translate(px, py);                      // PONTO FIXO: volta
+  ctx.rotate(rad(estado.graus));              // 2a op: rotacao
+  ctx.translate(-px, -py);                    // PONTO FIXO: leva à origem
+
+  ctx.scale(estado.escala, estado.escala);    // 1a op: escala
 
   // REFLEXÃO
   if (estado.espelhado) ctx.scale(-1, 1);
-
-  // PONTO FIXO no centro do corpo
-  ctx.translate(CENTRO.x, CENTRO.y);          // 3a op: volta
-  ctx.rotate(rad(estado.graus));              // 2a op: gira
-  ctx.translate(-CENTRO.x, -CENTRO.y);        // 1a op: leva à origem
 
   matrizAtual = ctx.getTransform();
 

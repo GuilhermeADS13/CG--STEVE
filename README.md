@@ -20,6 +20,6 @@ interativamente, enquanto o braço acena sozinho na animação.
     └──┴──┼──────┼──┴──┘
           │pn│pn │      60   y =  -60  quadril
           └──┴───┘           y =    0  chão
-```
+
 
 

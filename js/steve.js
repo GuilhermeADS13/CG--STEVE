@@ -1,10 +1,17 @@
 "use strict";
 
+function bloco(cor, x, y, larg, alt) {
+  ctx.fillStyle = cor;
+  ctx.fillRect(x, y, larg, alt);
+  ctx.strokeStyle = CONTORNO;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(x, y, larg, alt);
+}
+
 function desenhaCabeca() {
   const m = LARG_CORPO / 2;
 
-  ctx.fillStyle = PELE;
-  ctx.fillRect(-m, Y_TOPO, LARG_CORPO, ALT_CABECA);
+  bloco(PELE, -m, Y_TOPO, LARG_CORPO, ALT_CABECA);
 
   ctx.fillStyle = CABELO;
   ctx.fillRect(-m, Y_TOPO, LARG_CORPO, 12);
@@ -21,34 +28,27 @@ function desenhaCabeca() {
 }
 
 function desenhaTronco() {
-  ctx.fillStyle = CAMISA;
-  ctx.fillRect(-LARG_CORPO / 2, Y_OMBRO, LARG_CORPO, ALT_TRONCO);
+  bloco(CAMISA, -LARG_CORPO / 2, Y_OMBRO, LARG_CORPO, ALT_TRONCO);
 }
 
 function desenhaPerna() {
   const m = LARG_MEMBRO / 2;
-  ctx.fillStyle = CALCA;
-  ctx.fillRect(-m, 0, LARG_MEMBRO, ALT_PERNA - 12);
-  ctx.fillStyle = SAPATO;
-  ctx.fillRect(-m, ALT_PERNA - 12, LARG_MEMBRO, 12);
+  bloco(CALCA, -m, 0, LARG_MEMBRO, ALT_PERNA - 12);
+  bloco(SAPATO, -m, ALT_PERNA - 12, LARG_MEMBRO, 12);
 }
 
 function desenhaBracoDireito() {
   const x = LARG_CORPO / 2;
-  ctx.fillStyle = CAMISA;
-  ctx.fillRect(x, Y_OMBRO, LARG_MEMBRO, ALT_TRONCO / 2);
-  ctx.fillStyle = PELE;
-  ctx.fillRect(x, Y_OMBRO + ALT_TRONCO / 2, LARG_MEMBRO, ALT_TRONCO / 2);
+  bloco(CAMISA, x, Y_OMBRO, LARG_MEMBRO, ALT_TRONCO / 2);
+  bloco(PELE, x, Y_OMBRO + ALT_TRONCO / 2, LARG_MEMBRO, ALT_TRONCO / 2);
 }
 
 function desenhaBracoSuperior() {
-  ctx.fillStyle = CAMISA;
-  ctx.fillRect(OMBRO.x - LARG_MEMBRO / 2, Y_OMBRO, LARG_MEMBRO, ALT_TRONCO / 2);
+  bloco(CAMISA, BRACO_X - LARG_MEMBRO / 2, Y_OMBRO, LARG_MEMBRO, ALT_TRONCO / 2);
 }
 
 function desenhaMao() {
-  ctx.fillStyle = PELE;
-  ctx.fillRect(COTOVELO.x - LARG_MEMBRO / 2, COTOVELO.y, LARG_MEMBRO, ALT_TRONCO / 2);
+  bloco(PELE, BRACO_X - LARG_MEMBRO / 2, COTOVELO.y, LARG_MEMBRO, ALT_TRONCO / 2);
 }
 
 function desenhaSteve() {

@@ -19,7 +19,8 @@ canvas {
   height: auto;
   border: 1px solid #101e3e;
   border-radius: 10px;
-  background: #5c94fc;
+  background-image: linear-gradient(black, white);
+  background-image: url("cenario-steve.jpg");
   image-rendering: pixelated;
 }
 

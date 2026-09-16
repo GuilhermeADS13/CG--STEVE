@@ -123,11 +123,3 @@ Mão, já dentro da matriz do braço:
 - **Hierarquia de transformações** — a mão é desenhada **dentro** do `save`/`restore`
   do braço, então herda a rotação do ombro e ainda gira por conta própria no cotovelo.
   É o caso "a mão acompanha o braço".
-
-## Dois detalhes que valem explicar
-
-- **Os marcadores de pivô** são desenhados logo depois do primeiro `translate`, quando
-  o pivô já está na origem. Por isso `marcaPivo` só faz `arc(0, 0, ...)` — não precisa
-  de conta nenhuma para achar onde o ponto está.
-- **O raio do marcador e a espessura dos eixos** são divididos por `estado.escala`,
-  senão cresceriam junto com o Steve quando você aumenta a escala.

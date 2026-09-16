@@ -51,8 +51,6 @@ function desenhaMao() {
   ctx.fillRect(COTOVELO.x - LARG_MEMBRO / 2, COTOVELO.y, LARG_MEMBRO, ALT_TRONCO / 2);
 }
 
-// Chamada quando o pivô já está na origem, por isso desenha em (0,0).
-// O raio é dividido pela escala para o ponto não crescer junto com o Steve.
 function marcaPivo(cor) {
   ctx.beginPath();
   ctx.arc(0, 0, 4 / estado.escala, 0, Math.PI * 2);
@@ -68,26 +66,23 @@ function desenhaEixos() {
   ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -60); ctx.stroke();
 }
 
-/* O Canvas aplica as transformações DE BAIXO PARA CIMA: a última linha
-   escrita é a primeira que acontece com o desenho. */
 function desenhaSteve() {
   ctx.save();
 
-  // COMPOSIÇÃO: translação + escala + rotação na mesma matriz
+  // COMPOSIÇÃO
   ctx.translate(estado.x, estado.y);
   ctx.scale(estado.escala, estado.escala);
 
-  // REFLEXÃO: escala com fator negativo, o caso especial S(-1, 1)
+  // REFLEXÃO
   if (estado.espelhado) ctx.scale(-1, 1);
 
-  // PONTO FIXO no centro do corpo: T -> R -> T
+  // PONTO FIXO no centro do corpo
   ctx.translate(CENTRO.x, CENTRO.y);          // 3a op: volta
   ctx.rotate(rad(estado.graus));              // 2a op: gira
-  ctx.translate(-CENTRO.x, -CENTRO.y);        // 1a op: leva o centro à origem
+  ctx.translate(-CENTRO.x, -CENTRO.y);        // 1a op: leva à origem
 
   matrizAtual = ctx.getTransform();
 
-  // a MESMA função desenhada em dois lugares, só com translate
   ctx.save();
   ctx.translate(-LARG_MEMBRO / 2, Y_QUADRIL);
   desenhaPerna();
@@ -109,26 +104,24 @@ function desenhaSteve() {
   ctx.translate(OMBRO.x, OMBRO.y);            // 3a op: volta
   if (estado.guias) marcaPivo("#ff4d4d");
   ctx.rotate(anguloBraco);                    // 2a op: gira
-  ctx.translate(-OMBRO.x, -OMBRO.y);          // 1a op: leva o ombro à origem
+  ctx.translate(-OMBRO.x, -OMBRO.y);          // 1a op: leva à origem
   desenhaBracoSuperior();
 
   const anguloMao = rad(
     ACENO.mao * Math.sin(tempo * ACENO.velocidade + ACENO.atrasoMao)
   );
 
-  // HIERARQUIA: a mão é desenhada DENTRO do save do braço, então herda a
-  // rotação do ombro e ainda gira sozinha no cotovelo.
+  // HIERARQUIA: dentro do save do braço, a mão herda a rotação do ombro
   ctx.save();
   ctx.translate(COTOVELO.x, COTOVELO.y);      // 3a op: volta
   if (estado.guias) marcaPivo("#ff9f1c");
   ctx.rotate(anguloMao);                      // 2a op: gira
-  ctx.translate(-COTOVELO.x, -COTOVELO.y);    // 1a op: leva o cotovelo à origem
+  ctx.translate(-COTOVELO.x, -COTOVELO.y);    // 1a op: leva à origem
   desenhaMao();
   ctx.restore();
 
   ctx.restore();
 
-  // por cima, escondendo a emenda do ombro
   desenhaTronco();
   desenhaCabeca();
 

@@ -6,7 +6,6 @@ const cR = document.getElementById("c-r");
 const cS = document.getElementById("c-s");
 const cO = document.getElementById("c-ombro");
 const cC = document.getElementById("c-cotovelo");
-const cG = document.getElementById("c-guias");
 const cF = document.getElementById("c-espelho");
 
 const vX = document.getElementById("v-x");
@@ -27,7 +26,6 @@ function sincronizar() {
   cS.value = estado.escala; vS.textContent = estado.escala.toFixed(2) + "×";
   cO.value = estado.anguloOmbro;    vO.textContent = Math.round(estado.anguloOmbro) + GRAU;
   cC.value = estado.anguloCotovelo; vC.textContent = Math.round(estado.anguloCotovelo) + GRAU;
-  cG.checked = estado.guias;
   cF.checked = estado.espelhado;
 }
 
@@ -42,7 +40,6 @@ cR.addEventListener("input", function () { estado.graus = +cR.value; atualiza();
 cS.addEventListener("input", function () { estado.escala = +cS.value; atualiza(); });
 cO.addEventListener("input", function () { estado.anguloOmbro = +cO.value; atualiza(); });
 cC.addEventListener("input", function () { estado.anguloCotovelo = +cC.value; atualiza(); });
-cG.addEventListener("change", function () { estado.guias = cG.checked; atualiza(); });
 cF.addEventListener("change", function () { estado.espelhado = cF.checked; atualiza(); });
 
 document.getElementById("reset").addEventListener("click", function () {

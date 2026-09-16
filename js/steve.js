@@ -51,21 +51,6 @@ function desenhaMao() {
   ctx.fillRect(COTOVELO.x - LARG_MEMBRO / 2, COTOVELO.y, LARG_MEMBRO, ALT_TRONCO / 2);
 }
 
-function marcaPivo(cor) {
-  ctx.beginPath();
-  ctx.arc(0, 0, 4 / estado.escala, 0, Math.PI * 2);
-  ctx.fillStyle = cor;
-  ctx.fill();
-}
-
-function desenhaEixos() {
-  ctx.lineWidth = 2 / estado.escala;
-  ctx.strokeStyle = "#e63946";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(60, 0); ctx.stroke();
-  ctx.strokeStyle = "#2a9d8f";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -60); ctx.stroke();
-}
-
 function desenhaSteve() {
   ctx.save();
 
@@ -100,7 +85,6 @@ function desenhaSteve() {
   // PONTO FIXO no ombro
   ctx.save();
   ctx.translate(OMBRO.x, OMBRO.y);            // 3a op: volta
-  if (estado.guias) marcaPivo("#ff4d4d");
   ctx.rotate(anguloBraco);                    // 2a op: gira
   ctx.translate(-OMBRO.x, -OMBRO.y);          // 1a op: leva à origem
   desenhaBracoSuperior();
@@ -110,7 +94,6 @@ function desenhaSteve() {
   // HIERARQUIA: dentro do save do braço, a mão herda a rotação do ombro
   ctx.save();
   ctx.translate(COTOVELO.x, COTOVELO.y);      // 3a op: volta
-  if (estado.guias) marcaPivo("#ff9f1c");
   ctx.rotate(anguloMao);                      // 2a op: gira
   ctx.translate(-COTOVELO.x, -COTOVELO.y);    // 1a op: leva à origem
   desenhaMao();
@@ -120,14 +103,6 @@ function desenhaSteve() {
 
   desenhaTronco();
   desenhaCabeca();
-
-  if (estado.guias) {
-    desenhaEixos();
-    ctx.save();
-    ctx.translate(CENTRO.x, CENTRO.y);
-    marcaPivo("#ffd400");
-    ctx.restore();
-  }
 
   ctx.restore();
 }

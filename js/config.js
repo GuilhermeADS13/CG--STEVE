@@ -35,8 +35,7 @@ const estado = {
   escala: 2,
   anguloOmbro: 150,
   anguloCotovelo: 0,
-  espelhado: false,
-  guias: true
+  espelhado: false
 };
 
 const PADRAO = Object.assign({}, estado);

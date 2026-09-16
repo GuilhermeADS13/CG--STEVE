@@ -25,8 +25,8 @@
       </div>
 
       <div class="ctrl">
-        <label>Translação Y <b id="v-y">520</b></label>
-        <input type="range" id="c-y" min="120" max="600" step="1" value="520">
+        <label>Translação Y <b id="v-y">500</b></label>
+        <input type="range" id="c-y" min="120" max="600" step="1" value="500">
       </div>
 
       <div class="ctrl">
@@ -35,8 +35,8 @@
       </div>
 
       <div class="ctrl">
-        <label>Escala <b id="v-s">0.45×</b></label>
-        <input type="range" id="c-s" min="0.15" max="1.1" step="0.01" value="0.45">
+        <label>Escala <b id="v-s">2.00×</b></label>
+        <input type="range" id="c-s" min="0.5" max="4" step="0.05" value="2">
       </div>
 
       <div class="linha-btn">
@@ -70,13 +70,13 @@
     <div class="card" style="grid-column: 1 / -1;">
       <h2>Requisitos atendidos</h2>
       <ul class="req">
-        <li><b>1. Translação</b> — <code>ctx.translate</code> posiciona o Steve na cena e leva cada pivô à origem antes de girar. <code>js/steve.js</code></li>
+        <li><b>1. Translação</b> — <code>ctx.translate</code> posiciona o Steve e desenha a <b>mesma</b> função <code>desenhaPerna()</code> nos dois lados. <code>js/steve.js</code></li>
         <li><b>2. Rotação</b> — <code>ctx.rotate</code> gira o corpo, o braço e a mão. <code>js/steve.js</code></li>
-        <li><b>3. Escala</b> — <code>ctx.scale</code> redimensiona o Steve; o sprite é sempre desenhado em pixels originais. <code>js/steve.js</code></li>
-        <li><b>4. Composição</b> — translação → escala → rotação encadeadas na mesma matriz do corpo. <code>js/steve.js</code></li>
-        <li><b>5. Ponto fixo (T → Op → T⁻¹)</b> — três casos: corpo em torno do próprio centro, braço em torno do <b>ombro</b> e mão em torno do <b>cotovelo</b>. <code>js/steve.js</code></li>
+        <li><b>3. Escala</b> — <code>ctx.scale</code> redimensiona o Steve inteiro. <code>js/steve.js</code></li>
+        <li><b>4. Composição</b> — translação → escala → rotação encadeadas na mesma matriz. <code>js/steve.js</code></li>
+        <li><b>5. Ponto fixo (T → Op → T⁻¹)</b> — três casos: corpo no próprio centro, braço no <b>ombro</b> e mão no <b>cotovelo</b>. <code>js/steve.js</code></li>
         <li><b>6. Animação</b> — <code>requestAnimationFrame</code> com <code>setTransform(1,0,0,1,0,0)</code> zerando a matriz a cada frame. <code>js/main.js</code></li>
-        <li><b>7. Pilha de estados</b> — <code>save</code>/<code>restore</code> isolam cenário, corpo, braço, mão e marcadores.</li>
+        <li><b>7. Pilha de estados</b> — <code>save</code>/<code>restore</code> isolam cada perna, o braço, a mão e os marcadores. <code>js/steve.js</code></li>
         <li><b>Bônus</b> — interatividade (<code>js/controles.js</code>), <b>reflexão</b> <code>scale(-1, 1)</code> e <b>hierarquia</b>: a mão é desenhada dentro do <code>save</code> do braço, então herda a rotação do ombro e ainda gira no cotovelo.</li>
       </ul>
     </div>

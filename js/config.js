@@ -1,8 +1,8 @@
 /* =====================================================================
-   config.js — canvas, recortes do sprite, coordenadas locais e estado.
+   config.js — medidas, cores, pivôs e estado.
 
-   Este é o arquivo que você mexe para ajustar a cena: tamanho do Steve,
-   posição inicial, velocidade do aceno, pivôs das rotações.
+   É o arquivo que você mexe para mudar o Steve de tamanho, de cor ou
+   para ajustar o aceno. Nada aqui desenha nada.
    ===================================================================== */
 "use strict";
 
@@ -11,81 +11,88 @@ const ctx = canvas.getContext("2d");
 
 const LARG = canvas.width;     // 960
 const ALT_CV = canvas.height;  // 600
-const CHAO_Y = 520;            // linha do chão: é onde os pés do Steve ficam
+const CHAO = 500;              // linha do chão: é onde os pés do Steve ficam
 
 /* ---------------------------------------------------------------------
-   1) Recortes da folha de sprites
+   1) Medidas do Steve
 
-   steve-png.png tem 1297x769 e traz 4 poses do Steve lado a lado.
-   Usamos só a pose frontal, que vai de x=672 a x=1056.
+   A origem (0,0) fica ENTRE OS PÉS. No Canvas o eixo y cresce para
+   baixo, então o corpo todo fica em y negativo: quanto mais alto no
+   desenho, mais negativo o y.
 
-   Ela se decompõe em retângulos inteiramente opacos (nenhum deles contém
-   fundo branco), o que permite separar o braço do corpo sem precisar
-   mexer em pixel nenhum — nada de getImageData. Isso também é o que faz
-   a página funcionar abrindo o index.html direto, sem servidor.
+                 40
+              ┌──────┐
+              │cabeça│ 40        y = -160  topo
+        ┌──┬──┼──────┼──┬──┐
+        │br│  │tronco│  │br│ 60  y = -120  ombro
+        └──┴──┼──────┼──┴──┘
+              │pn│pn │        60  y =  -60  quadril
+              └──┴───┘            y =    0  chão
 --------------------------------------------------------------------- */
-const R_CORPO   = { sx: 768, sy:   0, sw: 193, sh: 769 }; // cabeça + tronco + pernas
-const R_BRACO_D = { sx: 961, sy: 192, sw:  96, sh: 288 }; // braço da direita (parado)
+const LARG_CORPO  = 40;  // largura do tronco e da cabeça
+const LARG_MEMBRO = 20;  // largura de um braço ou de uma perna
+const ALT_CABECA  = 40;
+const ALT_TRONCO  = 60;
+const ALT_PERNA   = 60;
 
-// O braço do tchau é cortado em dois elos para montar a hierarquia ombro → cotovelo.
-const R_BRACO_SUP = { sx: 672, sy: 192, sw: 96, sh: 192 }; // ombro → cotovelo
-const R_BRACO_INF = { sx: 672, sy: 384, sw: 96, sh:  96 }; // cotovelo → mão
+// Alturas acumuladas, de baixo para cima
+const Y_QUADRIL = -ALT_PERNA;               // -60
+const Y_OMBRO   = Y_QUADRIL - ALT_TRONCO;   // -120
+const Y_TOPO    = Y_OMBRO - ALT_CABECA;     // -160
 
 /* ---------------------------------------------------------------------
-   2) Sistema de coordenadas LOCAL do Steve
+   2) Pivôs — os pontos fixos das rotações
 
-   Origem (0,0) = entre os pés, no chão. Y cresce para baixo (padrão do
-   canvas), então o corpo todo ocupa y negativo.
+   Cada um é só um par de números no sistema local do Steve.
 --------------------------------------------------------------------- */
-const MEIA_LARG = R_CORPO.sw / 2;  // 96.5
-const ALT_STEVE = R_CORPO.sh;      // 769
+const CENTRO = { x: 0, y: Y_TOPO / 2 };  // (0, -80)  meio do corpo
 
-const P_CORPO     = { dx: -MEIA_LARG,                  dy: -ALT_STEVE };
-const P_BRACO_D   = { dx:  MEIA_LARG,                  dy: -ALT_STEVE + R_BRACO_D.sy };
-const P_BRACO_SUP = { dx: -MEIA_LARG - R_BRACO_SUP.sw, dy: -ALT_STEVE + R_BRACO_SUP.sy };
-const P_BRACO_INF = { dx: -MEIA_LARG - R_BRACO_INF.sw, dy: -ALT_STEVE + R_BRACO_INF.sy };
+// ombro esquerdo: encostado no tronco, na altura do ombro
+const OMBRO = { x: -(LARG_CORPO / 2 + LARG_MEMBRO / 2), y: Y_OMBRO };  // (-30, -120)
 
-// Pivôs usados nas rotações com ponto fixo (topo-centro de cada elo)
-const OMBRO    = { x: P_BRACO_SUP.dx + R_BRACO_SUP.sw / 2, y: P_BRACO_SUP.dy };
-const COTOVELO = { x: P_BRACO_INF.dx + R_BRACO_INF.sw / 2, y: P_BRACO_INF.dy };
-const CENTRO   = { x: 0, y: -ALT_STEVE / 2 };  // centro do corpo
+// cotovelo: na metade do braço
+const COTOVELO = { x: OMBRO.x, y: Y_OMBRO + ALT_TRONCO / 2 };          // (-30, -90)
 
 /* ---------------------------------------------------------------------
-   3) Ajustes do aceno — mexa aqui para mudar o tchau
+   3) Cores
+--------------------------------------------------------------------- */
+const PELE   = "#ffbb77";
+const CAMISA = "#00eedd";
+const CALCA  = "#0088cc";
+const SAPATO = "#888888";
+const CABELO = "#885522";
+const BOCA   = "#8a5a2b";
+
+/* ---------------------------------------------------------------------
+   4) Ajustes do aceno — mexa aqui para mudar o tchau
 --------------------------------------------------------------------- */
 const ACENO = {
-  anguloBase: 155,  // graus: o quanto o braço fica levantado
-  amplitude: 18,    // graus: o quanto ele vai e volta
-  velocidade: 5,    // rad/s da oscilação
-  mao: 22,          // graus: amplitude do giro extra da mão no cotovelo
+  anguloBase: 150,  // graus: o quanto o braço fica levantado
+  amplitude: 20,    // graus: o quanto ele vai e volta
+  velocidade: 5,    // o quão rápido
+  mao: 22,          // graus: o giro extra da mão no cotovelo
   atrasoMao: 1.1    // defasagem da mão em relação ao braço
 };
 
 /* ---------------------------------------------------------------------
-   4) Estado controlado pelo usuário
+   5) Estado controlado pelo usuário
 --------------------------------------------------------------------- */
 const estado = {
   x: LARG / 2,
-  y: CHAO_Y,
+  y: CHAO,
   graus: 0,
-  escala: 0.45,
+  escala: 2,
   espelhado: false,
   guias: true
 };
 
 const PADRAO = Object.assign({}, estado);
 
-// Matriz composta do corpo no frame atual — steve.js escreve, controles.js lê.
+// Tempo da animação, em segundos. main.js soma 0.016 a cada frame.
+let tempo = 0;
+
+// Matriz composta do corpo — steve.js escreve, controles.js mostra na tela.
 let matrizAtual = null;
 
-/* ---------------------------------------------------------------------
-   5) Sprite
---------------------------------------------------------------------- */
-const sprite = new Image();
-let spritePronto = false;
-let spriteFalhou = false;
-sprite.onload  = function () { spritePronto = true; };
-sprite.onerror = function () { spriteFalhou = true; };
-sprite.src = "steve-png.png";
-
+// Converte graus para radianos, porque ctx.rotate só aceita radianos.
 const rad = g => g * Math.PI / 180;

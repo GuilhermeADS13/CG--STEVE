@@ -51,8 +51,8 @@ window.addEventListener("keydown", function (e) {
     case "ArrowDown":   estado.y = limite(estado.y + passo, 120, ALT_CV); break;
     case "q": case "Q": estado.graus = limite(estado.graus - 4, -180, 180); break;
     case "e": case "E": estado.graus = limite(estado.graus + 4, -180, 180); break;
-    case "+": case "=": estado.escala = limite(estado.escala + 0.03, 0.15, 1.1); break;
-    case "-": case "_": estado.escala = limite(estado.escala - 0.03, 0.15, 1.1); break;
+    case "+": case "=": estado.escala = limite(estado.escala + 0.1, 0.5, 4); break;
+    case "-": case "_": estado.escala = limite(estado.escala - 0.1, 0.5, 4); break;
     case "f": case "F": estado.espelhado = !estado.espelhado; break;
     default: usou = false;
   }

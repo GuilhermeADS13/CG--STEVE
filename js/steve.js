@@ -1,123 +1,168 @@
 /* =====================================================================
-   steve.js — o personagem e as guias didáticas.
+   steve.js — desenha o Steve e aplica as transformações.
 
-   É aqui que moram as transformações principais:
-     - composição   T · S · [T·R·T⁻¹]
-     - ponto fixo   no centro do corpo, no ombro e no cotovelo
-     - reflexão     S(-1, 1)
-     - hierarquia   a mão desenhada dentro do save/restore do braço
+   Cada parte é um fillRect na posição que ela ocupa no corpo. Depois as
+   transformações movem, giram e escalam tudo isso.
    ===================================================================== */
 "use strict";
 
-// Desenha um recorte do sprite na posição local correspondente.
-function parte(r, p) {
-  ctx.drawImage(sprite, r.sx, r.sy, r.sw, r.sh, p.dx, p.dy, r.sw, r.sh);
+/* ---------------------------------------------------------------------
+   PARTE 1 — funções que só desenham, sem transformar nada
+--------------------------------------------------------------------- */
+
+function desenhaCabeca() {
+  const m = LARG_CORPO / 2;  // 20
+
+  ctx.fillStyle = PELE;
+  ctx.fillRect(-m, Y_TOPO, LARG_CORPO, ALT_CABECA);
+
+  ctx.fillStyle = CABELO;
+  ctx.fillRect(-m, Y_TOPO, LARG_CORPO, 12);
+
+  // olhos
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(-14, Y_TOPO + 18, 10, 6);
+  ctx.fillRect(4, Y_TOPO + 18, 10, 6);
+  ctx.fillStyle = "#0055aa";
+  ctx.fillRect(-10, Y_TOPO + 18, 6, 6);
+  ctx.fillRect(4, Y_TOPO + 18, 6, 6);
+
+  // boca
+  ctx.fillStyle = BOCA;
+  ctx.fillRect(-6, Y_TOPO + 30, 12, 4);
 }
 
-function desenharSteve(t) {
-  ctx.imageSmoothingEnabled = false; // preserva o visual pixelado
+function desenhaTronco() {
+  ctx.fillStyle = CAMISA;
+  ctx.fillRect(-LARG_CORPO / 2, Y_OMBRO, LARG_CORPO, ALT_TRONCO);
+}
 
+// Uma perna, desenhada a partir do quadril para baixo.
+// Quem chama decide de que lado ela fica, usando translate.
+function desenhaPerna() {
+  const m = LARG_MEMBRO / 2;
+  ctx.fillStyle = CALCA;
+  ctx.fillRect(-m, 0, LARG_MEMBRO, ALT_PERNA - 12);
+  ctx.fillStyle = SAPATO;
+  ctx.fillRect(-m, ALT_PERNA - 12, LARG_MEMBRO, 12);
+}
+
+// Braço parado (o direito), inteiro.
+function desenhaBracoDireito() {
+  const x = LARG_CORPO / 2;
+  ctx.fillStyle = CAMISA;
+  ctx.fillRect(x, Y_OMBRO, LARG_MEMBRO, ALT_TRONCO / 2);
+  ctx.fillStyle = PELE;
+  ctx.fillRect(x, Y_OMBRO + ALT_TRONCO / 2, LARG_MEMBRO, ALT_TRONCO / 2);
+}
+
+// O braço que acena é dividido em dois pedaços, para a mão poder
+// girar sozinha no cotovelo.
+function desenhaBracoSuperior() {
+  ctx.fillStyle = CAMISA;
+  ctx.fillRect(OMBRO.x - LARG_MEMBRO / 2, Y_OMBRO, LARG_MEMBRO, ALT_TRONCO / 2);
+}
+
+function desenhaMao() {
+  ctx.fillStyle = PELE;
+  ctx.fillRect(COTOVELO.x - LARG_MEMBRO / 2, COTOVELO.y, LARG_MEMBRO, ALT_TRONCO / 2);
+}
+
+// Bolinha que marca o ponto fixo. Só funciona se for chamada quando o
+// pivô já estiver na origem, logo depois do primeiro translate.
+function marcaPivo(cor) {
+  ctx.beginPath();
+  ctx.arc(0, 0, 4 / estado.escala, 0, Math.PI * 2);  // divide pela escala
+  ctx.fillStyle = cor;                               // para não crescer junto
+  ctx.fill();
+}
+
+// Eixos locais do Steve: X vermelho, Y verde.
+function desenhaEixos() {
+  ctx.lineWidth = 2 / estado.escala;
+  ctx.strokeStyle = "#e63946";
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(60, 0); ctx.stroke();
+  ctx.strokeStyle = "#2a9d8f";
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -60); ctx.stroke();
+}
+
+/* ---------------------------------------------------------------------
+   PARTE 2 — as transformações
+
+   Lembre-se: o Canvas aplica as transformações DE BAIXO PARA CIMA.
+   A última linha escrita é a primeira que acontece com o desenho.
+--------------------------------------------------------------------- */
+
+function desenhaSteve() {
   ctx.save();
 
-  // (1) TRANSLAÇÃO — leva a origem local do Steve até a posição na cena
-  ctx.translate(estado.x, estado.y);
+  // COMPOSIÇÃO: translação + escala + rotação, na mesma matriz
+  ctx.translate(estado.x, estado.y);   // 3a op: leva o Steve para a cena
+  ctx.scale(estado.escala, estado.escala);  // 2a op: muda o tamanho
 
-  // (3) ESCALA — depois dela, 1 unidade local = 1 pixel do sprite
-  ctx.scale(estado.escala, estado.escala);
-
-  // (BÔNUS) REFLEXÃO — escala com fator negativo em X espelha o Steve.
-  // É o caso especial S(-1, 1) visto na teoria: o tchau troca de lado.
+  // REFLEXÃO: escala com fator negativo em x, o caso especial S(-1, 1)
   if (estado.espelhado) ctx.scale(-1, 1);
 
-  // (2)+(5) ROTAÇÃO DO CORPO COM PONTO FIXO no centro: T → R → T⁻¹
-  ctx.translate(CENTRO.x, CENTRO.y);
-  ctx.rotate(rad(estado.graus));
-  ctx.translate(-CENTRO.x, -CENTRO.y);
+  // ROTAÇÃO COM PONTO FIXO no centro do corpo — o padrão T -> R -> T
+  ctx.translate(CENTRO.x, CENTRO.y);          // 3a op: volta
+  ctx.rotate(rad(estado.graus));              // 2a op: gira
+  ctx.translate(-CENTRO.x, -CENTRO.y);        // 1a op: leva o centro à origem
 
-  // (4) neste ponto a matriz já é a composição T · S · T(c) · R · T(−c)
+  // guarda a matriz composta para mostrar no painel
   matrizAtual = ctx.getTransform();
 
-  // braço parado, desenhado antes para ficar atrás
-  parte(R_BRACO_D, P_BRACO_D);
-
-  // (5) BRAÇO ACENANDO — rotação com ponto fixo no OMBRO: T → R → T⁻¹
-  const alpha = rad(ACENO.anguloBase + ACENO.amplitude * Math.sin(t * ACENO.velocidade));
+  // --- pernas: a MESMA função desenhada em dois lugares, só com translate
   ctx.save();
-  ctx.translate(OMBRO.x, OMBRO.y);    // T    leva o ombro até a origem
-  ctx.rotate(alpha);                  // R    gira em torno dele
-  ctx.translate(-OMBRO.x, -OMBRO.y);  // T⁻¹  devolve o ombro ao lugar
-  parte(R_BRACO_SUP, P_BRACO_SUP);
-
-  // (BÔNUS) HIERARQUIA — a mão é desenhada DENTRO do save do braço, então
-  // herda a rotação do ombro e ainda gira por conta própria no cotovelo.
-  const beta = rad(ACENO.mao * Math.sin(t * ACENO.velocidade + ACENO.atrasoMao));
-  ctx.save();
-  ctx.translate(COTOVELO.x, COTOVELO.y);
-  ctx.rotate(beta);
-  ctx.translate(-COTOVELO.x, -COTOVELO.y);
-  parte(R_BRACO_INF, P_BRACO_INF);
+  ctx.translate(-LARG_MEMBRO / 2, Y_QUADRIL);
+  desenhaPerna();
   ctx.restore();
 
-  if (estado.guias) marcarPivo(COTOVELO, "#ff9f1c", "cotovelo");
+  ctx.save();
+  ctx.translate(LARG_MEMBRO / 2, Y_QUADRIL);
+  desenhaPerna();
   ctx.restore();
 
-  // corpo por cima, escondendo a emenda do ombro
-  parte(R_CORPO, P_CORPO);
+  desenhaBracoDireito();
+
+  // --- braço que acena: rotação com ponto fixo no OMBRO
+  const anguloBraco = rad(
+    ACENO.anguloBase + ACENO.amplitude * Math.sin(tempo * ACENO.velocidade)
+  );
+
+  ctx.save();
+  ctx.translate(OMBRO.x, OMBRO.y);            // 3a op: volta
+  if (estado.guias) marcaPivo("#ff4d4d");     // aqui o ombro está na origem
+  ctx.rotate(anguloBraco);                    // 2a op: gira
+  ctx.translate(-OMBRO.x, -OMBRO.y);          // 1a op: leva o ombro à origem
+  desenhaBracoSuperior();
+
+  // HIERARQUIA: a mão é desenhada DENTRO do save do braço, então ela
+  // herda a rotação do ombro e ainda gira sozinha no cotovelo.
+  const anguloMao = rad(
+    ACENO.mao * Math.sin(tempo * ACENO.velocidade + ACENO.atrasoMao)
+  );
+
+  ctx.save();
+  ctx.translate(COTOVELO.x, COTOVELO.y);      // 3a op: volta
+  if (estado.guias) marcaPivo("#ff9f1c");     // o cotovelo está na origem
+  ctx.rotate(anguloMao);                      // 2a op: gira
+  ctx.translate(-COTOVELO.x, -COTOVELO.y);    // 1a op: leva o cotovelo à origem
+  desenhaMao();
+  ctx.restore();
+
+  ctx.restore();
+
+  // tronco e cabeça por cima, escondendo a emenda do ombro
+  desenhaTronco();
+  desenhaCabeca();
 
   if (estado.guias) {
-    desenharEixos();
-    marcarPivo(CENTRO, "#ffd400", "centro do corpo");
-    marcarPivo(OMBRO, "#ff4d4d", "ombro");
+    desenhaEixos();
+    ctx.save();
+    ctx.translate(CENTRO.x, CENTRO.y);
+    marcaPivo("#ffd400");
+    ctx.restore();
   }
 
-  ctx.restore();
-}
-
-// Eixos locais do Steve: X em vermelho, Y em verde.
-function desenharEixos() {
-  ctx.save();
-  ctx.lineWidth = 3 / estado.escala; // compensa a escala p/ a linha não engrossar
-  ctx.strokeStyle = "#e63946";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(180, 0); ctx.stroke();
-  ctx.strokeStyle = "#2a9d8f";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -180); ctx.stroke();
-  ctx.restore();
-}
-
-/* Converte o ponto local para coordenadas de tela aplicando a matriz
-   corrente na mão, e depois desenha o marcador com a matriz identidade.
-   Assim o círculo e o rótulo não herdam a escala nem a rotação. */
-function marcarPivo(p, cor, rotulo) {
-  const m = ctx.getTransform();
-  const tx = m.a * p.x + m.c * p.y + m.e;
-  const ty = m.b * p.x + m.d * p.y + m.f;
-
-  ctx.save();
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-  ctx.beginPath();
-  ctx.arc(tx, ty, 5, 0, Math.PI * 2);
-  ctx.fillStyle = cor;
-  ctx.fill();
-  ctx.lineWidth = 1.5;
-  ctx.strokeStyle = "#11141a";
-  ctx.stroke();
-
-  ctx.font = "12px Consolas, monospace";
-  ctx.fillStyle = "#11141a";
-  ctx.fillText(rotulo, tx + 9, ty - 7);
-  ctx.fillStyle = cor;
-  ctx.fillText(rotulo, tx + 8, ty - 8);
-
-  ctx.restore();
-}
-
-function avisoSprite() {
-  ctx.save();
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.fillStyle = "#11141a";
-  ctx.font = "16px Consolas, monospace";
-  ctx.textAlign = "center";
-  ctx.fillText("steve-png.png não carregou — confira se está na mesma pasta.", LARG / 2, 300);
   ctx.restore();
 }

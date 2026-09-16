@@ -16,8 +16,6 @@ function quadro(agora) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, LARG, ALT_CV);
 
-  desenharCenario();
-
   if (spritePronto) {
     desenharSteve(t);
     atualizarMatriz();

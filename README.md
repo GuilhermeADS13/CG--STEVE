@@ -5,9 +5,12 @@ JavaScript + Canvas 2D.
 
 ## Tema
 
-Uma cena estilo Minecraft onde o **Steve acena** para quem está olhando. O personagem
-é montado a partir de recortes de `steve-png.png` e pode ser transladado, girado,
-escalado e espelhado interativamente, enquanto o braço acena sozinho na animação.
+O **Steve acena** para quem está olhando. O personagem é montado a partir de recortes
+de `steve-png.png` e pode ser transladado, girado, escalado e espelhado
+interativamente, enquanto o braço acena sozinho na animação.
+
+> O cenário (céu, sol, nuvens e chão) ainda não foi feito — por enquanto o Steve
+> aparece sobre um fundo liso.
 
 ## Como abrir
 
@@ -16,11 +19,10 @@ Abra o `index.html` direto no navegador (duplo clique). Não precisa de servidor
 ## Arquivos
 
 | arquivo | o que é |
-|---|---|
+| --- | --- |
 | `index.html` | só a marcação: canvas, controles e painéis |
 | `css/estilo.css` | aparência da página |
 | `js/config.js` | **mexa aqui**: recortes do sprite, coordenadas locais, pivôs, ajustes do aceno e estado inicial |
-| `js/cenario.js` | céu, sol, nuvens e chão de blocos |
 | `js/steve.js` | o personagem e as transformações principais |
 | `js/controles.js` | sliders, checkboxes, teclado e painel da matriz |
 | `js/main.js` | loop de animação com o reset da matriz |
@@ -28,18 +30,19 @@ Abra o `index.html` direto no navegador (duplo clique). Não precisa de servidor
 | `README.md` | este arquivo |
 
 Os scripts são **clássicos** e carregados em ordem (`config` primeiro, `main` por
-último), compartilhando o escopo global. Não são módulos ES de propósito: `type="module"`
-é bloqueado por CORS no protocolo `file://`, e a entrega exige abrir sem servidor.
+último), compartilhando o escopo global. Não são módulos ES de propósito:
+`type="module"` é bloqueado por CORS no protocolo `file://`, e a entrega exige abrir
+sem servidor.
 
 ## Como o Steve é montado
 
-A folha tem 4 poses lado a lado; o projeto usa só a **pose frontal** (`x` de 672 a 1056).
-Ela se decompõe em retângulos **inteiramente opacos** — nenhum deles contém fundo
-branco — o que permite separar o braço do corpo sem manipular pixel nenhum
+A folha tem 4 poses lado a lado; o projeto usa só a **pose frontal** (`x` de 672 a
+1056). Ela se decompõe em retângulos **inteiramente opacos** — nenhum deles contém
+fundo branco — o que permite separar o braço do corpo sem manipular pixel nenhum
 (sem `getImageData`, o que também evita o problema de canvas *tainted* em `file://`).
 
 | parte | recorte no sprite (x, y, largura, altura) |
-|---|---|
+| --- | --- |
 | corpo (cabeça + tronco + pernas) | 768, 0, 193, 769 |
 | braço direito (parado) | 961, 192, 96, 288 |
 | braço esquerdo: ombro → cotovelo | 672, 192, 96, 192 |
@@ -50,33 +53,33 @@ Canvas o eixo `y` cresce para baixo, o corpo todo ocupa `y` negativo.
 
 ## Onde cada transformação é usada
 
-| requisito | onde no `index.html` | função |
-|---|---|---|
-| 1. Translação (`ctx.translate`) | `desenharCenario` (sol, nuvens, cada bloco do chão) e `desenharSteve` (posição na cena) | posicionar |
-| 2. Rotação (`ctx.rotate`) | `desenharSteve` — corpo, braço e mão | girar |
-| 3. Escala (`ctx.scale`) | `desenharSteve` — slider de escala | redimensionar |
-| 4. Composição | `desenharSteve` — `T · S · [T·R·T⁻¹]` na mesma matriz | combinar |
+| requisito | onde no código | função |
+| --- | --- | --- |
+| 1. Translação (`ctx.translate`) | `steve.js` — posição na cena e cada pivô levado à origem | posicionar |
+| 2. Rotação (`ctx.rotate`) | `steve.js` — corpo, braço e mão | girar |
+| 3. Escala (`ctx.scale`) | `steve.js` — slider de escala | redimensionar |
+| 4. Composição | `steve.js` — `T · S · [T·R·T⁻¹]` na mesma matriz | combinar |
 | 5. Ponto fixo `T → Op → T⁻¹` | 3 casos: centro do corpo, ombro e cotovelo | girar sem sair do lugar |
-| 6. Animação | `quadro()` — `requestAnimationFrame` + `setTransform(1,0,0,1,0,0)` | resetar a matriz por frame |
-| 7. Pilha de estados | `save`/`restore` em cenário, corpo, braço, mão e marcadores | isolar estado |
+| 6. Animação | `main.js` — `requestAnimationFrame` + `setTransform(1,0,0,1,0,0)` | resetar a matriz por frame |
+| 7. Pilha de estados | `save`/`restore` em corpo, braço, mão e marcadores | isolar estado |
 
 ### Composições, na ordem em que são aplicadas
 
 Corpo:
 
-```
+```text
 T(x, y) · S(s, s) · [ T(c) · R(θ) · T(−c) ]
 ```
 
 Braço, já dentro da matriz do corpo:
 
-```
+```text
 … · [ T(ombro) · R(α) · T(−ombro) ]
 ```
 
 Mão, já dentro da matriz do braço:
 
-```
+```text
 … · [ T(cotovelo) · R(β) · T(−cotovelo) ]
 ```
 

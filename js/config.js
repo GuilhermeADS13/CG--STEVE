@@ -11,7 +11,7 @@ const ctx = canvas.getContext("2d");
 
 const LARG = canvas.width;     // 960
 const ALT_CV = canvas.height;  // 600
-const CHAO_Y = 520;            // linha do chão na cena
+const CHAO_Y = 520;            // linha do chão: é onde os pés do Steve ficam
 
 /* ---------------------------------------------------------------------
    1) Recortes da folha de sprites

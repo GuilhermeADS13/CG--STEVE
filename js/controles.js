@@ -51,7 +51,8 @@ const TECLAS = {
   "=": () => ajusta("escala", 0.1),
   "-": () => ajusta("escala", -0.1),
   _: () => ajusta("escala", -0.1),
-  f: () => { estado.espelhado = !estado.espelhado; }
+  f: () => { estado.espelhado = !estado.espelhado; },
+  r: () => Object.assign(estado, PADRAO)
 };
 
 window.addEventListener("keydown", e => {

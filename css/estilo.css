@@ -94,15 +94,6 @@ pre.matriz {
   overflow-x: auto;
 }
 
-.ordem {
-  font-family: Consolas, monospace;
-  font-size: 12.5px;
-  color: var(--fraco);
-  margin-top: 12px;
-  line-height: 1.7;
-}
-.ordem em { color: var(--texto); font-style: normal; }
-
 ul.req { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.85; color: var(--fraco); }
 ul.req b { color: var(--texto); font-weight: 600; }
 ul.req code { color: var(--ciano); font-size: 12.5px; }

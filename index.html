@@ -39,6 +39,16 @@
         <input type="range" id="c-s" min="0.5" max="4" step="0.05" value="2">
       </div>
 
+      <div class="ctrl">
+        <label>Ângulo do ombro <b id="v-ombro">150°</b></label>
+        <input type="range" id="c-ombro" min="-180" max="180" step="1" value="150">
+      </div>
+
+      <div class="ctrl">
+        <label>Ângulo do cotovelo <b id="v-cotovelo">0°</b></label>
+        <input type="range" id="c-cotovelo" min="-90" max="90" step="1" value="0">
+      </div>
+
       <div class="linha-btn">
         <button id="reset">Resetar</button>
         <span class="check">
@@ -51,20 +61,12 @@
         </span>
       </div>
 
-      <p class="dica">Teclado: <b>setas</b> movem · <b>Q</b>/<b>E</b> giram · <b>+</b>/<b>−</b> escalam · <b>F</b> espelha.</p>
+      <p class="dica">Teclado: <b>setas</b> movem · <b>Q</b>/<b>E</b> giram · <b>+</b>/<b>−</b> escalam · <b>A</b>/<b>D</b> movem o ombro · <b>F</b> espelha.</p>
     </div>
 
     <div class="card">
       <h2>Matriz composta do Steve</h2>
       <pre class="matriz" id="matriz">carregando…</pre>
-      <div class="ordem">
-        corpo:<br>
-        <em>T</em>(x, y) · <em>S</em>(s, s) · [ <em>T</em>(c) · <em>R</em>(θ) · <em>T</em>(−c) ]<br><br>
-        braço, dentro do corpo:<br>
-        … · [ <em>T</em>(ombro) · <em>R</em>(α) · <em>T</em>(−ombro) ]<br><br>
-        mão, dentro do braço (hierarquia):<br>
-        … · [ <em>T</em>(cotovelo) · <em>R</em>(β) · <em>T</em>(−cotovelo) ]
-      </div>
     </div>
 
     <div class="card" style="grid-column: 1 / -1;">
@@ -75,7 +77,7 @@
         <li><b>3. Escala</b> — <code>ctx.scale</code> redimensiona o Steve inteiro. <code>js/steve.js</code></li>
         <li><b>4. Composição</b> — translação → escala → rotação encadeadas na mesma matriz. <code>js/steve.js</code></li>
         <li><b>5. Ponto fixo (T → Op → T⁻¹)</b> — três casos: corpo no próprio centro, braço no <b>ombro</b> e mão no <b>cotovelo</b>. <code>js/steve.js</code></li>
-        <li><b>6. Animação</b> — <code>requestAnimationFrame</code> com <code>setTransform(1,0,0,1,0,0)</code> zerando a matriz a cada frame. <code>js/main.js</code></li>
+        <li><b>6. Animação</b> — <b>a fazer</b>: entra em <code>js/main.js</code>, no <code>TODO</code>. A função <code>desenha()</code> já zera a matriz com <code>setTransform(1,0,0,1,0,0)</code> antes de desenhar; falta chamá-la por <code>requestAnimationFrame</code>.</li>
         <li><b>7. Pilha de estados</b> — <code>save</code>/<code>restore</code> isolam cada perna, o braço, a mão e os marcadores. <code>js/steve.js</code></li>
         <li><b>Bônus</b> — interatividade (<code>js/controles.js</code>), <b>reflexão</b> <code>scale(-1, 1)</code> e <b>hierarquia</b>: a mão é desenhada dentro do <code>save</code> do braço, então herda a rotação do ombro e ainda gira no cotovelo.</li>
       </ul>

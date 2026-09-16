@@ -7,7 +7,7 @@ JavaScript + Canvas 2D.
 
 O **Steve acena** para quem está olhando. Ele é desenhado com `fillRect` — cabeça,
 tronco, braços e pernas — e pode ser transladado, girado, escalado e espelhado
-interativamente, enquanto o braço acena sozinho na animação.
+interativamente. O braço e a mão também giram, cada um pelo seu pivô.
 
 ## Como o Steve é montado
 
@@ -20,6 +20,3 @@ interativamente, enquanto o braço acena sozinho na animação.
     └──┴──┼──────┼──┴──┘
           │pn│pn │      60   y =  -60  quadril
           └──┴───┘           y =    0  chão
-
-
-

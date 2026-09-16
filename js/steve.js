@@ -95,9 +95,7 @@ function desenhaSteve() {
 
   desenhaBracoDireito();
 
-  const anguloBraco = rad(
-    ACENO.anguloBase + ACENO.amplitude * Math.sin(tempo * ACENO.velocidade)
-  );
+  const anguloBraco = rad(estado.anguloOmbro);
 
   // PONTO FIXO no ombro
   ctx.save();
@@ -107,9 +105,7 @@ function desenhaSteve() {
   ctx.translate(-OMBRO.x, -OMBRO.y);          // 1a op: leva à origem
   desenhaBracoSuperior();
 
-  const anguloMao = rad(
-    ACENO.mao * Math.sin(tempo * ACENO.velocidade + ACENO.atrasoMao)
-  );
+  const anguloMao = rad(estado.anguloCotovelo);
 
   // HIERARQUIA: dentro do save do braço, a mão herda a rotação do ombro
   ctx.save();

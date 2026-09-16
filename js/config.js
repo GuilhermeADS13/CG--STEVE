@@ -28,26 +28,19 @@ const SAPATO = "#888888";
 const CABELO = "#885522";
 const BOCA   = "#8a5a2b";
 
-const ACENO = {
-  anguloBase: 150,
-  amplitude: 20,
-  velocidade: 5,
-  mao: 22,
-  atrasoMao: 1.1
-};
-
 const estado = {
   x: LARG / 2,
   y: CHAO,
   graus: 0,
   escala: 2,
+  anguloOmbro: 150,
+  anguloCotovelo: 0,
   espelhado: false,
   guias: true
 };
 
 const PADRAO = Object.assign({}, estado);
 
-let tempo = 0;
 let matrizAtual = null;
 
 const rad = g => g * Math.PI / 180;

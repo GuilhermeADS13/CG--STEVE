@@ -1,33 +1,23 @@
-:root {
-  --bg: #14161c;
-  --card: #1e222c;
-  --linha: #101e3e;
-  --texto: #e6e9ef;
-  --fraco: #d7d7d7;
-  --ciano: #2e6561;
-  --azul: #0088cc;
-}
-
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
   padding: 24px 16px 48px;
-  background: var(--bg);
-  color: var(--texto);
+  background: #14161c;
+  color: #e6e9ef;
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 .wrap { max-width: 1020px; margin: 0 auto; }
 
 h1 { font-size: 22px; margin: 0 0 4px; }
-h1 span { color: var(--ciano); }
+h1 span { color: #2e6561; }
 
 canvas {
   display: block;
   width: 100%;
   height: auto;
-  border: 1px solid var(--linha);
+  border: 1px solid #101e3e;
   border-radius: 10px;
   background: #5c94fc;
   image-rendering: pixelated;
@@ -42,8 +32,8 @@ canvas {
 @media (max-width: 720px) { .painel { grid-template-columns: 1fr; } }
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--linha);
+  background: #1e222c;
+  border: 1px solid #101e3e;
   border-radius: 10px;
   padding: 16px;
 }
@@ -51,7 +41,7 @@ canvas {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--fraco);
+  color: #d7d7d7;
   margin: 0 0 14px;
 }
 
@@ -62,13 +52,13 @@ canvas {
   font-size: 13px;
   margin-bottom: 6px;
 }
-.ctrl label b { color: var(--ciano); font-variant-numeric: tabular-nums; }
-input[type=range] { width: 100%; accent-color: var(--ciano); }
+.ctrl label b { color: #2e6561; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: #2e6561; }
 
 .linha-btn { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
 button {
-  background: var(--azul);
+  background: #0088cc;
   color: #fff;
   border: 0;
   border-radius: 6px;
@@ -79,19 +69,16 @@ button {
 button:hover { background: #00a0ee; }
 
 .check { display: flex; align-items: center; gap: 7px; font-size: 13px; }
-.check input { accent-color: var(--ciano); }
+.check input { accent-color: #2e6561; }
 
 pre.matriz {
   margin: 0;
-  font-family: "Cascadia Code", Consolas, monospace;
+  font-family: "Cascad", Consolas, monospace;
   font-size: 13px;
   line-height: 1.6;
-  color: var(--ciano);
+  color: #2e6561;
   background: #12151b;
   border-radius: 6px;
   padding: 12px;
   overflow-x: auto;
 }
-
-.dica { font-size: 12.5px; color: var(--fraco); margin: 12px 0 0; }
-.dica b { color: var(--texto); }

@@ -22,7 +22,6 @@ body {
 
 h1 { font-size: 22px; margin: 0 0 4px; }
 h1 span { color: var(--ciano); }
-.sub { color: var(--fraco); font-size: 14px; margin: 0 0 20px; }
 
 canvas {
   display: block;

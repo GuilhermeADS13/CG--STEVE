@@ -63,11 +63,6 @@ window.addEventListener("keydown", e => {
   atualiza();
 });
 
-document.getElementById("reset").addEventListener("click", () => {
-  Object.assign(estado, PADRAO);
-  atualiza();
-});
-
 function formata(n) {
   if (Math.abs(n) < 0.0005) n = 0;
   return n.toFixed(3).padStart(8);

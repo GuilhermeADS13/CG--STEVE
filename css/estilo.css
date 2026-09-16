@@ -55,17 +55,6 @@ canvas {
 .ctrl label b { color: #4f9a92; font-variant-numeric: tabular-nums; }
 input[type=range] { width: 100%; accent-color: #4f9a92; }
 
-button {
-  background: #0088cc;
-  color: #fff;
-  border: 0;
-  border-radius: 6px;
-  padding: 8px 14px;
-  font-size: 13px;
-  cursor: pointer;
-}
-button:hover { background: #00a0ee; }
-
 pre.matriz {
   margin: 0;
   font-size: 13px;

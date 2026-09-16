@@ -11,7 +11,7 @@ body {
 .wrap { max-width: 1020px; margin: 0 auto; }
 
 h1 { font-size: 22px; margin: 0 0 4px; }
-h1 span { color: #2e6561; }
+h1 span { color: #4f9a92; }
 
 canvas {
   display: block;
@@ -52,8 +52,8 @@ canvas {
   font-size: 13px;
   margin-bottom: 6px;
 }
-.ctrl label b { color: #2e6561; font-variant-numeric: tabular-nums; }
-input[type=range] { width: 100%; accent-color: #2e6561; }
+.ctrl label b { color: #4f9a92; font-variant-numeric: tabular-nums; }
+input[type=range] { width: 100%; accent-color: #4f9a92; }
 
 button {
   background: #0088cc;
@@ -68,10 +68,9 @@ button:hover { background: #00a0ee; }
 
 pre.matriz {
   margin: 0;
-  font-family: "Cascad", Consolas, monospace;
   font-size: 13px;
   line-height: 1.6;
-  color: #2e6561;
+  color: #4f9a92;
   background: #12151b;
   border-radius: 6px;
   padding: 12px;

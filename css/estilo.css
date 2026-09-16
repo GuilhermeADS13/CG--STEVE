@@ -55,8 +55,6 @@ canvas {
 .ctrl label b { color: #2e6561; font-variant-numeric: tabular-nums; }
 input[type=range] { width: 100%; accent-color: #2e6561; }
 
-.linha-btn { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
 button {
   background: #0088cc;
   color: #fff;
@@ -67,9 +65,6 @@ button {
   cursor: pointer;
 }
 button:hover { background: #00a0ee; }
-
-.check { display: flex; align-items: center; gap: 7px; font-size: 13px; }
-.check input { accent-color: #2e6561; }
 
 pre.matriz {
   margin: 0;

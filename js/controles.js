@@ -6,7 +6,6 @@ const cR = document.getElementById("c-r");
 const cS = document.getElementById("c-s");
 const cO = document.getElementById("c-ombro");
 const cC = document.getElementById("c-cotovelo");
-const cF = document.getElementById("c-espelho");
 
 const vX = document.getElementById("v-x");
 const vY = document.getElementById("v-y");
@@ -26,7 +25,6 @@ function sincronizar() {
   cS.value = estado.escala; vS.textContent = estado.escala.toFixed(2) + "×";
   cO.value = estado.anguloOmbro;    vO.textContent = Math.round(estado.anguloOmbro) + GRAU;
   cC.value = estado.anguloCotovelo; vC.textContent = Math.round(estado.anguloCotovelo) + GRAU;
-  cF.checked = estado.espelhado;
 }
 
 function atualiza() {
@@ -40,7 +38,6 @@ cR.addEventListener("input", function () { estado.graus = +cR.value; atualiza();
 cS.addEventListener("input", function () { estado.escala = +cS.value; atualiza(); });
 cO.addEventListener("input", function () { estado.anguloOmbro = +cO.value; atualiza(); });
 cC.addEventListener("input", function () { estado.anguloCotovelo = +cC.value; atualiza(); });
-cF.addEventListener("change", function () { estado.espelhado = cF.checked; atualiza(); });
 
 document.getElementById("reset").addEventListener("click", function () {
   Object.assign(estado, PADRAO);

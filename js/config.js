@@ -31,12 +31,13 @@ const CABELO = "#885522";
 const BOCA   = "#8a5a2b";
 const CONTORNO = "rgba(0, 0, 0, 0.25)";
 
+// NOTE: estado inicial
 const estado = {
   x: LARG / 2,
   y: CHAO,
   graus: 0,
   escala: 2.5,
-  anguloOmbro: 150,
+  anguloOmbro: 0,
   anguloCotovelo: 0,
   espelhado: false
 };

@@ -9,60 +9,72 @@
 <body>
 <div class="wrap">
 
-  <h1>Steve <span>— Transformações Geométricas 2D</span></h1>
-
-  <canvas id="cena" width="960" height="600"></canvas>
-
-  <div class="painel">
-
-    <div class="card">
-      <h2>Controles</h2>
-
-      <p>Teclado: <b>setas</b> movem · <b>Q</b>/<b>E</b> giram · <b>+</b>/<b>−</b> escalam · <b>A</b>/<b>D</b> movem o ombro · <b>F</b> espelha · <b>R</b> reseta.</p>
-
-      <div class="ctrl">
-        <label>Translação X <b id="v-x">480</b></label>
-        <input type="range" id="c-x" min="0" max="960" step="1" value="480">
-      </div>
-
-      <div class="ctrl">
-        <label>Translação Y <b id="v-y">540</b></label>
-        <input type="range" id="c-y" min="120" max="600" step="1" value="540">
-      </div>
-
-      <div class="ctrl">
-        <label>Rotação do corpo <b id="v-r">0°</b></label>
-        <input type="range" id="c-r" min="-180" max="180" step="1" value="0">
-      </div>
-
-      <div class="ctrl">
-        <label>Escala <b id="v-s">2.50×</b></label>
-        <input type="range" id="c-s" min="0.5" max="4" step="0.05" value="2.5">
-      </div>
-
-      <div class="ctrl">
-        <label>Ângulo do ombro <b id="v-ombro">150°</b></label>
-        <input type="range" id="c-ombro" min="-180" max="180" step="1" value="150">
-      </div>
-
-      <div class="ctrl">
-        <label>Ângulo do cotovelo <b id="v-cotovelo">0°</b></label>
-        <input type="range" id="c-cotovelo" min="-90" max="90" step="1" value="0">
-      </div>
-
+  <header>
+    <h1>Steve <span>— Transformações Geométricas 2D</span></h1>
+    <div id="buttons">
+      <button type="button" id="play-button">Iniciar animação</button>
+      <button type="button" id="controls-toggle">Mostrar controles</button>
     </div>
+  </header>
 
-    <div class="card">
-      <h2>Matriz composta do Steve</h2>
-      <pre class="matriz" id="matriz">carregando…</pre>
+  <main>
+    <canvas id="cena" width="960" height="600"></canvas>
+
+    <div id="painel-wrapper">
+      <div class="painel">
+
+        <div class="card">
+          <h2>Controles</h2>
+
+          <p>Teclado: <b>setas</b> movem · <b>Q</b>/<b>E</b> giram · <b>+</b>/<b>−</b> escalam · <b>A</b>/<b>D</b> movem o ombro · <b>F</b> espelha · <b>R</b> reseta.</p>
+
+          <div class="ctrl">
+            <label>Translação X <b id="v-x">480</b></label>
+            <input type="range" id="c-x" min="0" max="960" step="1" value="480">
+          </div>
+
+          <div class="ctrl">
+            <label>Translação Y <b id="v-y">540</b></label>
+            <input type="range" id="c-y" min="120" max="600" step="1" value="540">
+          </div>
+
+          <div class="ctrl">
+            <label>Rotação do corpo <b id="v-r">0°</b></label>
+            <input type="range" id="c-r" min="-180" max="180" step="1" value="0">
+          </div>
+
+          <div class="ctrl">
+            <label>Escala <b id="v-s">2.50×</b></label>
+            <input type="range" id="c-s" min="0.5" max="4" step="0.05" value="2.5">
+          </div>
+
+          <div class="ctrl">
+            <label>Ângulo do ombro <b id="v-ombro">150°</b></label>
+            <input type="range" id="c-ombro" min="-180" max="180" step="1" value="150">
+          </div>
+
+          <div class="ctrl">
+            <label>Ângulo do cotovelo <b id="v-cotovelo">0°</b></label>
+            <input type="range" id="c-cotovelo" min="-90" max="90" step="1" value="0">
+          </div>
+
+        </div>
+
+        <div class="card">
+          <h2>Matriz composta do Steve</h2>
+          <pre class="matriz" id="matriz">carregando…</pre>
+        </div>
+
+      </div>
     </div>
-
-  </div>
+  </main>
 </div>
 
 <script src="js/config.js"></script>
 <script src="js/steve.js"></script>
 <script src="js/controles.js"></script>
 <script src="js/main.js"></script>
+<script src="js/animacao.js"></script>
+<script src="js/botoes.js"></script>
 </body>
 </html>
